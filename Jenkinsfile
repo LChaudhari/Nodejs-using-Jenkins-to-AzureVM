@@ -4,13 +4,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git' // Replace with your Git repository URL
+                sudo git 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git' // Replace with your Git repository URL
             }
         }
         
         stage('Build') {
             steps {
-                sh 'npm install' // Assuming your Node.js app uses npm for package management
+                sudo sh 'npm install' // Assuming your Node.js app uses npm for package management
             }
         }
         
