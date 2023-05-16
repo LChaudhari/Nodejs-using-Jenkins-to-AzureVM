@@ -19,5 +19,5 @@ pipeline {
                 azureDeploy(connection: 'Azure_Secrets', azureCredentialsId: 'Azure_Secrets', resourceGroup: 'lalit-test', location: 'Central India') // Replace with your Azure credentials ID, resource group, location, and template file path
             }
         }
-    }
+    
 }
