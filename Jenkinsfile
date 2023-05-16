@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your/repo.git' // Replace with your Git repository URL
+                git 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git' // Replace with your Git repository URL
             }
         }
         
