@@ -1,16 +1,16 @@
 pipeline {
     agent any
     
-    stages {
-        stage('Checkout') {
-            steps {
-                sudo git 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git' // Replace with your Git repository URL
-            }
-        }
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 sudo git 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git' // Replace with your Git repository URL
+//             }
+//         }
         
         stage('Build') {
             steps {
-                sudo sh 'npm install' // Assuming your Node.js app uses npm for package management
+                sh 'npm install' // Assuming your Node.js app uses npm for package management
             }
         }
         
