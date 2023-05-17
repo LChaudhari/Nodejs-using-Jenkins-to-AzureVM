@@ -2,10 +2,10 @@ pipeline {
   agent any
 
   environment {
-    AZURE_VM_IP = '20.244.119.227'
+    AZURE_VM_IP = '20.244.119.***'
     AZURE_VM_USER = 'sampleapp'
     AZURE_VM_APP_DIR = '/var/www/app'
-    GIT_REPO_URL = 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git'
+    GIT_REPO_URL = 'repo_url'
   }
 
   stages {
