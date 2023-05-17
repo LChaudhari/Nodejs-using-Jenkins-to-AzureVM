@@ -2,7 +2,6 @@ pipeline {
   agent any
 
   environment {
-    AZURE_CREDENTIALS = credentials('Azure_Secrets')
     AZURE_VM_IP = '20.244.119.227'
     AZURE_VM_USER = 'sampleapp'
     AZURE_VM_APP_DIR = '/var/www/app'
@@ -13,21 +12,18 @@ pipeline {
     stage('Deploy to Azure VM') {
       steps {
         script {
-          withCredentials([azureServicePrincipal('Azure_Secrets')]) {
-            def azureCredentials = AZURE_CREDENTIALS
-            // SSH into the Azure VM and execute deployment steps
-            sshagent(credentials: [azureCredentials]) {
-              sh '''
-                ssh -o StrictHostKeyChecking=no ${AZURE_VM_USER}@${AZURE_VM_IP} "
-                sudo mkdir -p ${AZURE_VM_APP_DIR}
-                sudo chown -R ${AZURE_VM_USER}:${AZURE_VM_USER} ${AZURE_VM_APP_DIR}
-                git clone ${GIT_REPO_URL} ${AZURE_VM_APP_DIR}
-                cd ${AZURE_VM_APP_DIR}
+          // SSH into the Azure VM and execute deployment steps
+          withCredentials([sshUserPrivateKey(credentialsId: '<AzureVM_USR_PASS>', keyFileVariable: 'sampleapp')]) {
+            sh '''
+              ssh -o StrictHostKeyChecking=no -i $SSH_KEY ${AZURE_VM_USER}@${AZURE_VM_IP} "
+                sudo mkdir -p ${APP_DIR}
+                sudo chown -R ${AZURE_VM_USER}:${AZURE_VM_USER} ${APP_DIR}
+                git clone ${GIT_REPO_URL} ${APP_DIR}
+                cd ${APP_DIR}
                 npm install
                 pm2 start index.js
-                "
-              '''
-            }
+              "
+            '''
           }
         }
       }
