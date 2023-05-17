@@ -13,7 +13,7 @@ pipeline {
       steps {
         script {
           // SSH into the Azure VM and execute deployment steps
-          withCredentials([sshUserPrivateKey(credentialsId: '<AzureVM_USR_PASS>', keyFileVariable: 'sampleapp')]) {
+          withCredentials([sshUserPrivateKey(credentialsId: 'AzureVM_USR_PASS', keyFileVariable: 'sampleapp')]) {
             sh '''
               ssh -o StrictHostKeyChecking=no -i $SSH_KEY ${AZURE_VM_USER}@${AZURE_VM_IP} "
                 sudo mkdir -p ${APP_DIR}
