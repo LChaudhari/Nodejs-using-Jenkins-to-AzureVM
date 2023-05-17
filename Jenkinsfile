@@ -15,13 +15,13 @@ pipeline {
           // SSH into the Azure VM and execute deployment steps
           withCredentials([sshUserPrivateKey(credentialsId: 'AzureVM_USR_PASS', keyFileVariable: 'sampleapp')]) {
             sh '''
-              ssh -o StrictHostKeyChecking=no -i $sampleapp ${AZURE_VM_USER}@${AZURE_VM_IP} "
+              ssh -o StrictHostKeyChecking=no -i sampleapp ${AZURE_VM_USER}@${AZURE_VM_IP} "
                 sudo mkdir -p ${APP_DIR}
                 sudo chown -R ${AZURE_VM_USER}:${AZURE_VM_USER} ${APP_DIR}
                 git clone ${GIT_REPO_URL} ${APP_DIR}
                 cd ${APP_DIR}
                 npm install
-                pm2 start index.js
+                npm start
               "
             '''
           }
