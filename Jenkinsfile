@@ -1,23 +1,36 @@
 pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                git checkout 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git' // Replace with your Git repository URL
+  agent any
+
+  environment {
+    AZURE_CREDENTIALS = credentials('Azure_Secrets')
+    AZURE_VM_IP = '20.244.119.227'
+    AZURE_VM_USER = 'sampleapp'
+    AZURE_VM_APP_DIR = '/var/www/app'
+    GIT_REPO_URL = 'https://github.com/LChaudhari/Nodejs-using-Jenkins-to-AzureVM.git'
+  }
+
+  stages {
+    stage('Deploy to Azure VM') {
+      steps {
+        script {
+          withCredentials([azureServicePrincipal('Azure_Secrets')]) {
+            def azureCredentials = AZURE_CREDENTIALS
+            // SSH into the Azure VM and execute deployment steps
+            sshagent(credentials: [azureCredentials]) {
+              sh '''
+                ssh -o StrictHostKeyChecking=no ${AZURE_VM_USER}@${AZURE_VM_IP} "
+                sudo mkdir -p ${AZURE_VM_APP_DIR}
+                sudo chown -R ${AZURE_VM_USER}:${AZURE_VM_USER} ${AZURE_VM_APP_DIR}
+                git clone ${GIT_REPO_URL} ${AZURE_VM_APP_DIR}
+                cd ${AZURE_VM_APP_DIR}
+                npm install
+                pm2 start index.js
+                "
+              '''
             }
+          }
         }
-        
-        stage('Build') {
-            steps {
-                sh 'npm install' // Assuming your Node.js app uses npm for package management
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                azureDeploy(connection: 'Azure_Secrets', azureCredentialsId: 'Azure_Secrets', resourceGroup: 'lalit-test', location: 'Central India') // Replace with your Azure credentials ID, resource group, location, and template file path
-            }
-        }
-}
+      }
+    }
+  }
 }
